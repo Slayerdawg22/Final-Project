@@ -23,7 +23,8 @@ namespace Final_Project
         Screen screen;
         KeyboardState keyboardState;
         Texture2D track, carBlue, carGreen, introScreen, carYellow, bettingScreen, BlueScreen, greenScreen, yellowScreen, backBtn;
-        Rectangle trackRect1, trackRect2, carBlueRect, carGreenRect, carYellowRect;
+        Texture2D startBtn;
+        Rectangle trackRect1, trackRect2, carBlueRect, carGreenRect, carYellowRect, startBtnRect;
         Rectangle carBlueRectBet, carGreenRectbet, carYellowRectBet, backBtnRect;
         int scrollSpeed = 1;
         int maxSpeed = 20;
@@ -63,6 +64,7 @@ namespace Final_Project
             carBlueRectBet = new Rectangle(70, 170, 300, 233);
             carGreenRectbet = new Rectangle(340, 150, 350, 255);
             carYellowRectBet = new Rectangle(560, 230, 190, 190);
+            startBtnRect = new Rectangle(270,-135,250,250);
             money = 10;
 
             //Back Button
@@ -88,6 +90,7 @@ namespace Final_Project
             greenScreen = Content.Load<Texture2D>("GreenGoblin");
             yellowScreen = Content.Load<Texture2D>("YellowBird");
             amount = Content.Load<SpriteFont>("Amount");
+            startBtn = Content.Load<Texture2D>("Start1");
         }
 
         protected override void Update(GameTime gameTime)
@@ -126,7 +129,8 @@ namespace Final_Project
                         
                         screen = Screen.Yellow;
                     }
-                    
+                    if (startBtnRect.Contains(mouseState.Position))
+                        screen = Screen.Game;
 
                 }
             }
@@ -207,7 +211,8 @@ namespace Final_Project
                 _spriteBatch.Draw(carBlue, carBlueRectBet, Color.White);
                 _spriteBatch.Draw(carGreen, carGreenRectbet, Color.White);
                 _spriteBatch.Draw(carYellow, carYellowRectBet, Color.White);
-                _spriteBatch.DrawString(amount, money.ToString("Money:00$"), new Vector2(40, 40), Color.White);
+                _spriteBatch.Draw(startBtn, startBtnRect, Color.White);
+                _spriteBatch.DrawString(amount, money.ToString("Money:00$"), new Vector2(30, 30), Color.White);
             }
             if (screen == Screen.Blue)
             {

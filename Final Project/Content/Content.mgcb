@@ -116,7 +116,7 @@
 /processorParam:TextureFormat=Color
 /build:RouletteBack.png
 
-#begin Start.png
+#begin Start1.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -126,7 +126,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Start.png
+/build:Start1.png
 
 #begin Track.png
 /importer:TextureImporter
