@@ -10,6 +10,9 @@ namespace Final_Project
         enum Screen
         {
             Intro,
+            Betting,
+            Blue,
+            Green,
             Game
         }
         MouseState mouseState;
@@ -18,18 +21,20 @@ namespace Final_Project
         private SpriteBatch _spriteBatch;
         Screen screen;
         KeyboardState keyboardState;
-        Texture2D track, carBlue, carGreen, introScreen;
-        Rectangle trackRect1, trackRect2, carBlueRect, carGreenRect;
+        Texture2D track, carBlue, carGreen, introScreen, carYellow, bettingScreen, BlueScreen, greenScreen, backBtn;
+        Rectangle trackRect1, trackRect2, carBlueRect, carGreenRect, carYellowRect;
+        Rectangle carBlueRectBet, carGreenRectbet, carYellowRectBet, backBtnRect;
         int scrollSpeed = 1;
         int maxSpeed = 20;
         int acceleration = 1;
         float seconds;
+        
         Vector2 carGreenSpeed, carBlueSpeed;
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            
+            IsMouseVisible = true;
 
             
         }
@@ -42,12 +47,24 @@ namespace Final_Project
             
             int screenWidth = GraphicsDevice.Viewport.Width;
             int trackHeight = 1000;
+            
+            //Game Rects
             trackRect1 = new Rectangle(0, 0, screenWidth, trackHeight);
             trackRect2 = new Rectangle(0, -trackHeight, screenWidth, trackHeight);
             carBlueRect = new Rectangle(90, 230, 350, 233);
             carGreenRect = new Rectangle(340, 210, 350, 255);
-            carBlueSpeed = new Vector2(0,2);
-            carGreenSpeed = new Vector2(0,2);
+            carYellowRect = new Rectangle(560, 290, 190, 190);
+
+            //Betting Rects
+            carBlueRectBet = new Rectangle(90, 170, 350, 233);
+            carGreenRectbet = new Rectangle(340, 150, 350, 255);
+            carYellowRectBet = new Rectangle(560, 230, 190, 190);
+
+            //Back Button
+            backBtnRect = new Rectangle(10, 10, 50, 50);
+
+            //carBlueSpeed = new Vector2(0,2);
+            //carGreenSpeed = new Vector2(0,2);
             random = new Random();
             base.Initialize();
         }
@@ -58,7 +75,12 @@ namespace Final_Project
             track = Content.Load<Texture2D>("Track");
             carBlue = Content.Load<Texture2D>("carBlue1");
             carGreen = Content.Load<Texture2D>("carGreen1");
+            carYellow = Content.Load<Texture2D>("yellowCar");
             introScreen = Content.Load<Texture2D>("RouletteBack");
+            bettingScreen = Content.Load<Texture2D>("Betground");
+            BlueScreen = Content.Load<Texture2D>("BlueBoy");
+            backBtn = Content.Load<Texture2D>("BackBtn");
+            greenScreen = Content.Load<Texture2D>("GreenGoblin");
         }
 
         protected override void Update(GameTime gameTime)
@@ -67,16 +89,47 @@ namespace Final_Project
                 Exit();
             this.Window.Title = $"x = {mouseState.X}, y = {mouseState.Y}";
             keyboardState = Keyboard.GetState();
+            mouseState = Mouse.GetState();
 
 
             if (screen == Screen.Intro)
             {
 
                 if (keyboardState.GetPressedKeyCount() > 0)
-                    screen = Screen.Game;
+                    screen = Screen.Betting;
 
             }
-            else if (screen == Screen.Game)
+            if (screen == Screen.Betting)
+            {
+                if (mouseState.LeftButton == ButtonState.Pressed)
+                {
+                    if (carGreenRectbet.Contains(mouseState.Position))
+                    {
+                        
+                        screen = Screen.Game;
+                    }
+                    if (carBlueRectBet.Contains(mouseState.Position))
+                    {
+                        
+                        screen = Screen.Blue;
+                    }    
+                    if (carYellowRectBet.Contains(mouseState.Position))
+                    {
+                        
+                        screen = Screen.Game;
+                    }
+
+
+                }
+            }
+            if (screen == Screen.Blue)
+            {
+                if (mouseState.LeftButton == ButtonState.Pressed)
+                    if (backBtnRect.Contains(mouseState.Position))
+                        screen = Screen.Betting;
+
+            }
+            if (screen == Screen.Game)
             {
 
                 seconds += (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -99,16 +152,16 @@ namespace Final_Project
                     trackRect2.Y = trackRect1.Y - trackRect2.Height;
 
                 //Car speeds:
-                if (screen == Screen.Game);
-                carBlueRect.Y -= random.Next(-2, 4);
-                carGreenRect.Y -= random.Next(-2, 4);
+                if (screen == Screen.Game && seconds >= 2)
+                {
+                    carBlueRect.Y -= random.Next(-2, 4);
+                    carGreenRect.Y -= random.Next(-2, 4);
+                    carYellowRect.Y -= random.Next(-2, 4);
+                }
 
 
 
-
-
-                //if (carBlueRect.Y < 300) ;
-                //carBlueRect.Y = 230;
+                
             }
             base.Update(gameTime);
         }
@@ -123,15 +176,31 @@ namespace Final_Project
                 _spriteBatch.Draw(introScreen, new Rectangle(0, 0, 800, 500), Color.White);
               
             }
-
-           
-            else if (screen == Screen.Game)
+            if (screen == Screen.Betting)
+            {
+                _spriteBatch.Draw(bettingScreen, new Rectangle(0,0,800,600), Color.White);
+                _spriteBatch.Draw(carBlue, carBlueRectBet, Color.White);
+                _spriteBatch.Draw(carGreen, carGreenRectbet, Color.White);
+                _spriteBatch.Draw(carYellow, carYellowRectBet, Color.White);
+            }
+            if (screen == Screen.Blue)
+            {
+                _spriteBatch.Draw(BlueScreen, new Rectangle(0, 0, 800, 600), Color.White);
+                _spriteBatch.Draw(carBlue, new Rectangle(100,20,500,400), Color.White);
+                _spriteBatch.Draw(backBtn,backBtnRect, Color.White);
+            }
+            if (screen == Screen.Green)
+            {
+                    _spriteBatch.Draw(greenScreen, new Rectangle(0, 0, 800, 600), Color.White);
+            }
+            if (screen == Screen.Game)
             {
                 
                 _spriteBatch.Draw(track, trackRect1, Color.White);
                 _spriteBatch.Draw(track, trackRect2, Color.White);
                 _spriteBatch.Draw(carBlue, carBlueRect, Color.White);
                 _spriteBatch.Draw(carGreen, carGreenRect, Color.White);
+                _spriteBatch.Draw(carYellow, carYellowRect, Color.White);
                 
             }
 
