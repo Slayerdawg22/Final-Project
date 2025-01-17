@@ -16,21 +16,22 @@ namespace Final_Project
             Yellow,
             Game
         }
-        MouseState mouseState;
+        MouseState mouseState, premouseState;
         Random random;
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         Screen screen;
         KeyboardState keyboardState;
         Texture2D track, carBlue, carGreen, introScreen, carYellow, bettingScreen, BlueScreen, greenScreen, yellowScreen, backBtn;
-        Texture2D startBtn;
-        Rectangle trackRect1, trackRect2, carBlueRect, carGreenRect, carYellowRect, startBtnRect;
+        Texture2D startBtn, fiveTkn, twentyFiveTkn, fiftyTkn, hundredTkn;
+        Rectangle trackRect1, trackRect2, carBlueRect, carGreenRect, carYellowRect, startBtnRect, fiveTknRect, twentyFiveTknRect, hundredTknRect, fiftyTknRect;
         Rectangle carBlueRectBet, carGreenRectbet, carYellowRectBet, backBtnRect;
         int scrollSpeed = 1;
         int maxSpeed = 20;
         int acceleration = 1;
         float seconds;
         int money;
+        int betBlue, betGreen, betYellow;
         SpriteFont amount;
 
         
@@ -56,16 +57,21 @@ namespace Final_Project
             //Game Rects
             trackRect1 = new Rectangle(0, 0, screenWidth, trackHeight);
             trackRect2 = new Rectangle(0, -trackHeight, screenWidth, trackHeight);
-            carBlueRect = new Rectangle(90, 230, 350, 233);
-            carGreenRect = new Rectangle(340, 210, 350, 255);
-            carYellowRect = new Rectangle(560, 290, 190, 190);
+            carBlueRect = new Rectangle(90, 290, 110, 160);
+            carGreenRect = new Rectangle(340, 290, 110, 160);
+            carYellowRect = new Rectangle(580, 290, 110, 160);
 
             //Betting Rects
-            carBlueRectBet = new Rectangle(70, 170, 300, 233);
-            carGreenRectbet = new Rectangle(340, 150, 350, 255);
-            carYellowRectBet = new Rectangle(560, 230, 190, 190);
+            carBlueRectBet = new Rectangle(110, 240, 140, 190);
+            carGreenRectbet = new Rectangle(340, 240, 140, 190);
+            carYellowRectBet = new Rectangle(560, 240, 140, 190);
             startBtnRect = new Rectangle(270,-135,250,250);
-            money = 10;
+            money = 10000;
+            betBlue = 0;
+            betGreen = 0;
+            betYellow = 0;
+            //Tkns
+            fiftyTknRect = new Rectangle(300, 200, 70, 70);
 
             //Back Button
             backBtnRect = new Rectangle(10, 10, 50, 50);
@@ -80,9 +86,9 @@ namespace Final_Project
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             track = Content.Load<Texture2D>("Track");
-            carBlue = Content.Load<Texture2D>("carBlue1");
-            carGreen = Content.Load<Texture2D>("carGreen1");
-            carYellow = Content.Load<Texture2D>("yellowCar");
+            carBlue = Content.Load<Texture2D>("carBlue2");
+            carGreen = Content.Load<Texture2D>("carGreen2");
+            carYellow = Content.Load<Texture2D>("yellowCar1");
             introScreen = Content.Load<Texture2D>("RouletteBack");
             bettingScreen = Content.Load<Texture2D>("Betground");
             BlueScreen = Content.Load<Texture2D>("BlueBoy");
@@ -91,6 +97,10 @@ namespace Final_Project
             yellowScreen = Content.Load<Texture2D>("YellowBird");
             amount = Content.Load<SpriteFont>("Amount");
             startBtn = Content.Load<Texture2D>("Start1");
+            fiveTkn = Content.Load<Texture2D>("5$");
+            twentyFiveTkn = Content.Load<Texture2D>("25$");
+            fiftyTkn = Content.Load<Texture2D>("50$");
+            hundredTkn = Content.Load<Texture2D>("100$");
         }
 
         protected override void Update(GameTime gameTime)
@@ -99,6 +109,7 @@ namespace Final_Project
                 Exit();
             this.Window.Title = $"x = {mouseState.X}, y = {mouseState.Y}";
             keyboardState = Keyboard.GetState();
+            premouseState = mouseState;
             mouseState = Mouse.GetState();
 
             //Intro
@@ -140,6 +151,12 @@ namespace Final_Project
                 if (mouseState.LeftButton == ButtonState.Pressed)
                     if (backBtnRect.Contains(mouseState.Position))
                         screen = Screen.Betting;
+                if (mouseState.LeftButton == ButtonState.Pressed && premouseState.LeftButton == ButtonState.Released)
+                    if (fiftyTknRect.Contains(mouseState.Position))
+                    { 
+                         money -= 50;
+                         betBlue += 50;
+                    }
 
             }
             if (screen == Screen.Green)
@@ -154,6 +171,14 @@ namespace Final_Project
                 if (mouseState.LeftButton == ButtonState.Pressed)
                     if (backBtnRect.Contains(mouseState.Position))
                         screen = Screen.Betting;
+
+            }
+            //Restart
+            if (screen == Screen.Betting)
+            {
+                carBlueRect.Y = 290;
+                carGreenRect.Y = 290;
+                carYellowRect.Y = 290;
 
             }
 
@@ -187,11 +212,19 @@ namespace Final_Project
                     carGreenRect.Y -= random.Next(-2, 4);
                     carYellowRect.Y -= random.Next(-2, 4);
                 }
-
-
+                if (carBlueRect.Y <= -120)
+                    if (betBlue >= 0)
+                        money += betBlue * 2;
+                if (carBlueRect.Y <= -120 || carGreenRect.Y <= -120 || carYellowRect.Y <= -120)
+                {
+                    scrollSpeed = 0;
+                    seconds = 0;
+                    screen = Screen.Betting;
+                }
 
                 
             }
+            
             base.Update(gameTime);
         }
 
@@ -217,19 +250,21 @@ namespace Final_Project
             if (screen == Screen.Blue)
             {
                 _spriteBatch.Draw(BlueScreen, new Rectangle(0, 0, 800, 600), Color.White);
-                _spriteBatch.Draw(carBlue, new Rectangle(100,20,500,400), Color.White);
+                _spriteBatch.Draw(carBlue, new Rectangle(70,180,200,290), Color.White);
                 _spriteBatch.Draw(backBtn,backBtnRect, Color.White);
+                _spriteBatch.Draw(fiftyTkn,fiftyTknRect, Color.White);
+                _spriteBatch.DrawString(amount, money.ToString("Money:00$"), new Vector2(90, 20), Color.White);
             }
             if (screen == Screen.Green)
             {
                 _spriteBatch.Draw(greenScreen, new Rectangle(0, 0, 800, 600), Color.White);
-                _spriteBatch.Draw(carGreen, new Rectangle(100,20,500,400), Color.White);
+                _spriteBatch.Draw(carGreen, new Rectangle(70,140,200,290), Color.White);
                 _spriteBatch.Draw(backBtn,backBtnRect, Color.White);
             }
             if (screen == Screen.Yellow)
             {
                 _spriteBatch.Draw(yellowScreen, new Rectangle(0,0,800, 600), Color.White);
-                _spriteBatch.Draw(carYellow, new Rectangle(40,160,290,290), Color.White);
+                _spriteBatch.Draw(carYellow, new Rectangle(70,160,200,290), Color.White);
                 _spriteBatch.Draw(backBtn, backBtnRect, Color.White);   
             }
             if (screen == Screen.Game)
