@@ -215,7 +215,6 @@ namespace Final_Project
                     if (backBtnRect.Contains(mouseState.Position))
                         screen = Screen.Betting;
                 if (mouseState.LeftButton == ButtonState.Pressed && premouseState.LeftButton == ButtonState.Released)
-                    if (fiftyTknRect.Contains(mouseState.Position))
                     {
                         if (fiftyTknRect.Contains(mouseState.Position))
                         {
@@ -364,7 +363,7 @@ namespace Final_Project
             if (screen == Screen.Yellow)
             {
                 _spriteBatch.Draw(yellowScreen, new Rectangle(0,0,800, 600), Color.White);
-                _spriteBatch.Draw(carYellow, new Rectangle(50,160,200,290), Color.White);
+                _spriteBatch.Draw(carYellow, new Rectangle(40,160,200,290), Color.White);
                 _spriteBatch.Draw(backBtn, backBtnRect, Color.White);
                 _spriteBatch.Draw(fiftyTkn, fiftyTknRect, Color.White);
                 _spriteBatch.Draw(twentyFiveTkn, twentyFiveTknRect, Color.White);
