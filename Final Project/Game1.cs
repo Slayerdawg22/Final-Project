@@ -64,14 +64,18 @@ namespace Final_Project
             //Betting Rects
             carBlueRectBet = new Rectangle(110, 240, 140, 190);
             carGreenRectbet = new Rectangle(340, 240, 140, 190);
-            carYellowRectBet = new Rectangle(560, 240, 140, 190);
+            carYellowRectBet = new Rectangle(540, 240, 140, 190);
             startBtnRect = new Rectangle(270,-135,250,250);
             money = 10000;
             betBlue = 0;
             betGreen = 0;
             betYellow = 0;
             //Tkns
-            fiftyTknRect = new Rectangle(300, 200, 70, 70);
+            fiftyTknRect = new Rectangle(370, 300, 70, 70);
+            twentyFiveTknRect = new Rectangle(440, 300, 70, 70);
+            fiveTknRect = new Rectangle(510, 300, 70, 70);
+            hundredTknRect = new Rectangle(300, 300, 70, 70);
+
 
             //Back Button
             backBtnRect = new Rectangle(10, 10, 50, 50);
@@ -152,18 +156,57 @@ namespace Final_Project
                     if (backBtnRect.Contains(mouseState.Position))
                         screen = Screen.Betting;
                 if (mouseState.LeftButton == ButtonState.Pressed && premouseState.LeftButton == ButtonState.Released)
+                {
                     if (fiftyTknRect.Contains(mouseState.Position))
-                    { 
-                         money -= 50;
-                         betBlue += 50;
+                    {
+                        money -= 50;
+                        betBlue += 50;
                     }
-
+                    if (hundredTknRect.Contains(mouseState.Position))
+                    {
+                        money -= 100;
+                        betBlue += 100;
+                    }
+                    if (twentyFiveTknRect.Contains(mouseState.Position))
+                    {
+                        money -= 25;
+                        betBlue += 25;
+                    }
+                    if (fiveTknRect.Contains(mouseState.Position))
+                    {
+                        money -= 5;
+                        betBlue += 5;
+                    }
+                }
             }
             if (screen == Screen.Green)
             {
                 if (mouseState.LeftButton == ButtonState.Pressed)
                     if (backBtnRect.Contains(mouseState.Position))
                         screen = Screen.Betting;
+                if (mouseState.LeftButton == ButtonState.Pressed && premouseState.LeftButton == ButtonState.Released)
+                {
+                    if (fiftyTknRect.Contains(mouseState.Position))
+                    {
+                        money -= 50;
+                        betGreen += 50;
+                    }
+                    if (hundredTknRect.Contains(mouseState.Position))
+                    {
+                        money -= 100;
+                        betGreen += 100;
+                    }
+                    if (twentyFiveTknRect.Contains(mouseState.Position))
+                    {
+                        money -= 25;
+                        betGreen += 25;
+                    }
+                    if (fiveTknRect.Contains(mouseState.Position))
+                    {
+                        money -= 5;
+                        betGreen += 5;
+                    }
+                }
 
             }
             if (screen == Screen.Yellow)
@@ -171,6 +214,30 @@ namespace Final_Project
                 if (mouseState.LeftButton == ButtonState.Pressed)
                     if (backBtnRect.Contains(mouseState.Position))
                         screen = Screen.Betting;
+                if (mouseState.LeftButton == ButtonState.Pressed && premouseState.LeftButton == ButtonState.Released)
+                    if (fiftyTknRect.Contains(mouseState.Position))
+                    {
+                        if (fiftyTknRect.Contains(mouseState.Position))
+                        {
+                            money -= 50;
+                            betYellow += 50;
+                        }
+                        if (hundredTknRect.Contains(mouseState.Position))
+                        {
+                            money -= 100;
+                            betYellow += 100;
+                        }
+                        if (twentyFiveTknRect.Contains(mouseState.Position))
+                        {
+                            money -= 25;
+                            betYellow += 25;
+                        }
+                        if (fiveTknRect.Contains(mouseState.Position))
+                        {
+                            money -= 5;
+                            betYellow += 5;
+                        }
+                    }
 
             }
             //Restart
@@ -214,7 +281,30 @@ namespace Final_Project
                 }
                 if (carBlueRect.Y <= -120)
                     if (betBlue >= 0)
+                    {
                         money += betBlue * 2;
+                        betBlue = 0;
+                        betYellow = 0;
+                        betGreen = 0;
+                    }
+                if (carGreenRect.Y <= -120)
+                    if (betGreen >= 0)
+                    {
+                        money += betGreen * 2;
+                        betGreen = 0;
+                        betBlue = 0;
+                        betYellow = 0;
+                    }
+                if (carYellowRect.Y <= -120)
+                    if (betYellow >= 0)
+                    {
+                        money += betYellow * 2;
+                        betYellow = 0;
+                        betGreen = 0;
+                        betBlue = 0;
+                    }
+
+
                 if (carBlueRect.Y <= -120 || carGreenRect.Y <= -120 || carYellowRect.Y <= -120)
                 {
                     scrollSpeed = 0;
@@ -253,19 +343,35 @@ namespace Final_Project
                 _spriteBatch.Draw(carBlue, new Rectangle(70,180,200,290), Color.White);
                 _spriteBatch.Draw(backBtn,backBtnRect, Color.White);
                 _spriteBatch.Draw(fiftyTkn,fiftyTknRect, Color.White);
+                _spriteBatch.Draw(twentyFiveTkn,twentyFiveTknRect,Color.White);
+                _spriteBatch.Draw(hundredTkn, hundredTknRect, Color.White);
+                _spriteBatch.Draw(fiveTkn, fiveTknRect, Color.White);
                 _spriteBatch.DrawString(amount, money.ToString("Money:00$"), new Vector2(90, 20), Color.White);
+                _spriteBatch.DrawString(amount, betBlue.ToString("Blue Boy Bet: 00$"), new Vector2(210, 20), Color.White);
             }
             if (screen == Screen.Green)
             {
                 _spriteBatch.Draw(greenScreen, new Rectangle(0, 0, 800, 600), Color.White);
                 _spriteBatch.Draw(carGreen, new Rectangle(70,140,200,290), Color.White);
                 _spriteBatch.Draw(backBtn,backBtnRect, Color.White);
+                _spriteBatch.Draw(fiftyTkn, fiftyTknRect, Color.White);
+                _spriteBatch.Draw(twentyFiveTkn, twentyFiveTknRect, Color.White);
+                _spriteBatch.Draw(hundredTkn, hundredTknRect, Color.White);
+                _spriteBatch.Draw(fiveTkn, fiveTknRect, Color.White);
+                _spriteBatch.DrawString(amount, money.ToString("Money:00$"), new Vector2(90, 20), Color.White);
+                _spriteBatch.DrawString(amount, betGreen.ToString("Green Goblin Bet: 00$"), new Vector2(210, 20), Color.White);
             }
             if (screen == Screen.Yellow)
             {
                 _spriteBatch.Draw(yellowScreen, new Rectangle(0,0,800, 600), Color.White);
-                _spriteBatch.Draw(carYellow, new Rectangle(70,160,200,290), Color.White);
-                _spriteBatch.Draw(backBtn, backBtnRect, Color.White);   
+                _spriteBatch.Draw(carYellow, new Rectangle(50,160,200,290), Color.White);
+                _spriteBatch.Draw(backBtn, backBtnRect, Color.White);
+                _spriteBatch.Draw(fiftyTkn, fiftyTknRect, Color.White);
+                _spriteBatch.Draw(twentyFiveTkn, twentyFiveTknRect, Color.White);
+                _spriteBatch.Draw(hundredTkn, hundredTknRect, Color.White);
+                _spriteBatch.Draw(fiveTkn, fiveTknRect, Color.White);
+                _spriteBatch.DrawString(amount, money.ToString("Money:00$"), new Vector2(90, 20), Color.White);
+                _spriteBatch.DrawString(amount, betYellow.ToString("Yellow Bird Bet: 00$"), new Vector2(210, 20), Color.White);
             }
             if (screen == Screen.Game)
             {
