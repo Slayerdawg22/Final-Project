@@ -14,6 +14,9 @@ namespace Final_Project
             Blue,
             Green,
             Yellow,
+            BlueWin,
+            GreenWin,
+            YellowWin,
             Game
         }
         MouseState mouseState, premouseState;
@@ -23,14 +26,14 @@ namespace Final_Project
         Screen screen;
         KeyboardState keyboardState;
         Texture2D track, carBlue, carGreen, introScreen, carYellow, bettingScreen, BlueScreen, greenScreen, yellowScreen, backBtn;
-        Texture2D startBtn, fiveTkn, twentyFiveTkn, fiftyTkn, hundredTkn;
+        Texture2D startBtn, fiveTkn, twentyFiveTkn, fiftyTkn, hundredTkn, blueWin, greenWin, yellowWin;
         Rectangle trackRect1, trackRect2, carBlueRect, carGreenRect, carYellowRect, startBtnRect, fiveTknRect, twentyFiveTknRect, hundredTknRect, fiftyTknRect;
         Rectangle carBlueRectBet, carGreenRectbet, carYellowRectBet, backBtnRect;
         int scrollSpeed = 1;
         int maxSpeed = 20;
         int acceleration = 1;
         float seconds;
-        int money;
+        int money, amountWon;
         int betBlue, betGreen, betYellow;
         SpriteFont amount;
 
@@ -67,6 +70,7 @@ namespace Final_Project
             carYellowRectBet = new Rectangle(540, 240, 140, 190);
             startBtnRect = new Rectangle(270,-135,250,250);
             money = 10000;
+            amountWon = 0;
             betBlue = 0;
             betGreen = 0;
             betYellow = 0;
@@ -105,6 +109,9 @@ namespace Final_Project
             twentyFiveTkn = Content.Load<Texture2D>("25$");
             fiftyTkn = Content.Load<Texture2D>("50$");
             hundredTkn = Content.Load<Texture2D>("100$");
+            blueWin = Content.Load<Texture2D>("BlueWin");
+            greenWin = Content.Load<Texture2D>("GreenWin");
+            yellowWin = Content.Load<Texture2D>("YellowWin");
         }
 
         protected override void Update(GameTime gameTime)
@@ -151,7 +158,7 @@ namespace Final_Project
 
                 }
             }
-            //backBtn
+            //Betting
             if (screen == Screen.Blue)
             {
                 if (mouseState.LeftButton == ButtonState.Pressed)
@@ -244,11 +251,22 @@ namespace Final_Project
             //Restart
             if (screen == Screen.Betting)
             {
+                amountWon = 0;
                 carBlueRect.Y = 290;
                 carGreenRect.Y = 290;
                 carYellowRect.Y = 290;
+                scrollSpeed = 0;
+                seconds = 0;
 
             }
+            //Wins
+            if (screen == Screen.YellowWin || screen == Screen.BlueWin || screen == Screen.GreenWin)
+                if (mouseState.LeftButton == ButtonState.Pressed && premouseState.LeftButton == ButtonState.Released)
+                    if (backBtnRect.Contains(mouseState.Position))
+                        screen = Screen.Betting;
+            
+            
+            
 
             //Game
             if (screen == Screen.Game)
@@ -283,26 +301,32 @@ namespace Final_Project
                 if (carBlueRect.Y <= -120)
                     if (betBlue >= 0)
                     {
-                        money += betBlue * 2;
+                        amountWon += betBlue * 2;
+                        money += amountWon;
                         betBlue = 0;
                         betYellow = 0;
                         betGreen = 0;
+                        screen = Screen.BlueWin;
                     }
                 if (carGreenRect.Y <= -120)
                     if (betGreen >= 0)
                     {
-                        money += betGreen * 2;
+                        amountWon += betGreen * 2;
+                        money += amountWon;
                         betGreen = 0;
                         betBlue = 0;
                         betYellow = 0;
+                        screen = Screen.GreenWin;
                     }
                 if (carYellowRect.Y <= -120)
                     if (betYellow >= 0)
                     {
-                        money += betYellow * 2;
+                        amountWon += betYellow * 2;
+                        money += amountWon;
                         betYellow = 0;
                         betGreen = 0;
                         betBlue = 0;
+                        screen = Screen.YellowWin;
                     }
 
 
@@ -310,7 +334,7 @@ namespace Final_Project
                 {
                     scrollSpeed = 0;
                     seconds = 0;
-                    screen = Screen.Betting;
+                    
                 }
 
                 
@@ -349,6 +373,7 @@ namespace Final_Project
                 _spriteBatch.Draw(fiveTkn, fiveTknRect, Color.White);
                 _spriteBatch.DrawString(amount, money.ToString("Money:00$"), new Vector2(90, 20), Color.White);
                 _spriteBatch.DrawString(amount, betBlue.ToString("Blue Boy Bet: 00$"), new Vector2(210, 20), Color.White);
+
             }
             if (screen == Screen.Green)
             {
@@ -373,6 +398,24 @@ namespace Final_Project
                 _spriteBatch.Draw(fiveTkn, fiveTknRect, Color.White);
                 _spriteBatch.DrawString(amount, money.ToString("Money:00$"), new Vector2(90, 20), Color.White);
                 _spriteBatch.DrawString(amount, betYellow.ToString("Yellow Bird Bet: 00$"), new Vector2(210, 20), Color.White);
+            }
+            if (screen == Screen.BlueWin)
+            {
+                _spriteBatch.Draw(blueWin, new Rectangle(0, 0, 800, 600), Color.White);
+                _spriteBatch.DrawString(amount, amountWon.ToString("You Won: 00$"), new Vector2(300, 300), Color.White);
+                _spriteBatch.Draw(backBtn, backBtnRect, Color.White);
+            }
+            if (screen == Screen.GreenWin)
+            {
+                _spriteBatch.Draw(greenWin, new Rectangle(0, 0, 800, 600), Color.White);
+                _spriteBatch.DrawString(amount, amountWon.ToString("You Won: 00$"), new Vector2(300, 300), Color.White);
+                _spriteBatch.Draw(backBtn, backBtnRect, Color.White);
+            }
+            if (screen == Screen.YellowWin)
+            {
+                _spriteBatch.Draw(yellowWin, new Rectangle(0, 0, 800, 600), Color.White);
+                _spriteBatch.DrawString(amount, amountWon.ToString("You Won: 00$"), new Vector2(300, 300), Color.White);
+                _spriteBatch.Draw(backBtn, backBtnRect, Color.White);
             }
             if (screen == Screen.Game)
             {
