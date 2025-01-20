@@ -127,7 +127,7 @@ namespace Final_Project
             //Betting
             if (screen == Screen.Betting)
             {
-                if (mouseState.LeftButton == ButtonState.Pressed)
+                if (mouseState.LeftButton == ButtonState.Pressed && premouseState.LeftButton == ButtonState.Released)
                 {
                     if (carGreenRectbet.Contains(mouseState.Position))
                     {
@@ -146,6 +146,8 @@ namespace Final_Project
                     }
                     if (startBtnRect.Contains(mouseState.Position))
                         screen = Screen.Game;
+                    if (betBlue < 0 || betGreen < 0 || betYellow < 0)
+                        Exit();
 
                 }
             }
@@ -274,9 +276,9 @@ namespace Final_Project
                 //Car speeds:
                 if (screen == Screen.Game && seconds >= 2)
                 {
-                    carBlueRect.Y -= random.Next(-2, 4);
-                    carGreenRect.Y -= random.Next(-2, 4);
-                    carYellowRect.Y -= random.Next(-2, 4);
+                    carBlueRect.Y -= random.Next(-2, 5);
+                    carGreenRect.Y -= random.Next(-2, 5);
+                    carYellowRect.Y -= random.Next(-2, 5);
                 }
                 if (carBlueRect.Y <= -120)
                     if (betBlue >= 0)
@@ -304,7 +306,7 @@ namespace Final_Project
                     }
 
 
-                if (carBlueRect.Y <= -120 || carGreenRect.Y <= -120 || carYellowRect.Y <= -120)
+                if (carBlueRect.Y <= -160 || carGreenRect.Y <= -160 || carYellowRect.Y <= -160)
                 {
                     scrollSpeed = 0;
                     seconds = 0;
