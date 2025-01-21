@@ -26,9 +26,9 @@ namespace Final_Project
         Screen screen;
         KeyboardState keyboardState;
         Texture2D track, carBlue, carGreen, introScreen, carYellow, bettingScreen, BlueScreen, greenScreen, yellowScreen, backBtn;
-        Texture2D startBtn, fiveTkn, twentyFiveTkn, fiftyTkn, hundredTkn, blueWin, greenWin, yellowWin;
+        Texture2D startBtn, fiveTkn, twentyFiveTkn, fiftyTkn, hundredTkn, blueWin, greenWin, yellowWin, allInTkn;
         Rectangle trackRect1, trackRect2, carBlueRect, carGreenRect, carYellowRect, startBtnRect, fiveTknRect, twentyFiveTknRect, hundredTknRect, fiftyTknRect;
-        Rectangle carBlueRectBet, carGreenRectbet, carYellowRectBet, backBtnRect;
+        Rectangle carBlueRectBet, carGreenRectbet, carYellowRectBet, backBtnRect, allInTknRect;
         int scrollSpeed = 1;
         int maxSpeed = 20;
         int acceleration = 1;
@@ -65,9 +65,9 @@ namespace Final_Project
             carYellowRect = new Rectangle(580, 290, 110, 160);
 
             //Betting Rects
-            carBlueRectBet = new Rectangle(110, 240, 140, 190);
-            carGreenRectbet = new Rectangle(340, 240, 140, 190);
-            carYellowRectBet = new Rectangle(540, 240, 140, 190);
+            carBlueRectBet = new Rectangle(110, 200, 140, 190);
+            carGreenRectbet = new Rectangle(340, 200, 140, 190);
+            carYellowRectBet = new Rectangle(540, 200, 140, 190);
             startBtnRect = new Rectangle(270,-135,250,250);
             money = 10000;
             amountWon = 0;
@@ -79,6 +79,7 @@ namespace Final_Project
             twentyFiveTknRect = new Rectangle(440, 300, 70, 70);
             fiveTknRect = new Rectangle(510, 300, 70, 70);
             hundredTknRect = new Rectangle(300, 300, 70, 70);
+            allInTknRect = new Rectangle(580,300,70,70);
 
 
             //Back Button
@@ -102,13 +103,14 @@ namespace Final_Project
             BlueScreen = Content.Load<Texture2D>("BlueBoy");
             backBtn = Content.Load<Texture2D>("BackBtn");
             greenScreen = Content.Load<Texture2D>("GreenGoblin");
-            yellowScreen = Content.Load<Texture2D>("YellowBird");
+            yellowScreen = Content.Load<Texture2D>("YellowBird1");
             amount = Content.Load<SpriteFont>("Amount");
             startBtn = Content.Load<Texture2D>("Start1");
             fiveTkn = Content.Load<Texture2D>("5$");
             twentyFiveTkn = Content.Load<Texture2D>("25$");
             fiftyTkn = Content.Load<Texture2D>("50$");
             hundredTkn = Content.Load<Texture2D>("100$");
+            allInTkn = Content.Load<Texture2D>("All in");
             blueWin = Content.Load<Texture2D>("BlueWin");
             greenWin = Content.Load<Texture2D>("GreenWin");
             yellowWin = Content.Load<Texture2D>("YellowWin");
@@ -186,6 +188,11 @@ namespace Final_Project
                         money -= 5;
                         betBlue += 5;
                     }
+                    if (allInTknRect.Contains(mouseState.Position))
+                    {
+                        betBlue += money;
+                        money -= money;
+                    }
                 }
             }
             if (screen == Screen.Green)
@@ -214,6 +221,11 @@ namespace Final_Project
                     {
                         money -= 5;
                         betGreen += 5;
+                    }
+                    if (allInTknRect.Contains(mouseState.Position))
+                    {
+                        betGreen += money;
+                        money -= money;
                     }
                 }
 
@@ -245,7 +257,12 @@ namespace Final_Project
                             money -= 5;
                             betYellow += 5;
                         }
-                    }
+                        if (allInTknRect.Contains(mouseState.Position))
+                        {
+                        betYellow += money;
+                        money -= money;
+                        }
+                }
 
             }
             //Restart
@@ -297,6 +314,12 @@ namespace Final_Project
                     carBlueRect.Y -= random.Next(-2, 5);
                     carGreenRect.Y -= random.Next(-2, 5);
                     carYellowRect.Y -= random.Next(-2, 5);
+                }
+                if (carBlueRect.Y <= -80 || carGreenRect.Y <= -80 || carYellowRect.Y <= -80)
+                {
+                    carBlueRect.Y -= 2;
+                    carGreenRect.Y -= 2;
+                    carYellowRect.Y -= 2;
                 }
                 if (carBlueRect.Y <= -120)
                     if (betBlue >= 0)
@@ -373,6 +396,7 @@ namespace Final_Project
                 _spriteBatch.Draw(fiveTkn, fiveTknRect, Color.White);
                 _spriteBatch.DrawString(amount, money.ToString("Money:00$"), new Vector2(90, 20), Color.White);
                 _spriteBatch.DrawString(amount, betBlue.ToString("Blue Boy Bet: 00$"), new Vector2(210, 20), Color.White);
+                _spriteBatch.Draw(allInTkn,allInTknRect, Color.White);
 
             }
             if (screen == Screen.Green)
@@ -386,6 +410,7 @@ namespace Final_Project
                 _spriteBatch.Draw(fiveTkn, fiveTknRect, Color.White);
                 _spriteBatch.DrawString(amount, money.ToString("Money:00$"), new Vector2(90, 20), Color.White);
                 _spriteBatch.DrawString(amount, betGreen.ToString("Green Goblin Bet: 00$"), new Vector2(210, 20), Color.White);
+                _spriteBatch.Draw(allInTkn, allInTknRect, Color.White);
             }
             if (screen == Screen.Yellow)
             {
@@ -398,6 +423,7 @@ namespace Final_Project
                 _spriteBatch.Draw(fiveTkn, fiveTknRect, Color.White);
                 _spriteBatch.DrawString(amount, money.ToString("Money:00$"), new Vector2(90, 20), Color.White);
                 _spriteBatch.DrawString(amount, betYellow.ToString("Yellow Bird Bet: 00$"), new Vector2(210, 20), Color.White);
+                _spriteBatch.Draw(allInTkn, allInTknRect, Color.White);
             }
             if (screen == Screen.BlueWin)
             {

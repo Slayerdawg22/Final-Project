@@ -61,6 +61,18 @@
 /processorParam:TextureFormat=Color
 /build:50$.png
 
+#begin All in.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:All in.png
+
 #begin amount.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
@@ -212,7 +224,7 @@
 /processorParam:TextureFormat=Color
 /build:Track.png
 
-#begin YellowBird.png
+#begin YellowBird1.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -222,7 +234,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:YellowBird.png
+/build:YellowBird1.png
 
 #begin yellowCar1.png
 /importer:TextureImporter
