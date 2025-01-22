@@ -33,12 +33,21 @@ namespace Final_Project
         int maxSpeed = 20;
         int acceleration = 1;
         float seconds;
-        int money, amountWon;
+        int amountWon;
+        
         int betBlue, betGreen, betYellow;
+ 
         SpriteFont amount;
+        private int money;
+        public int Money
+        {
+            get { return money; }
+            set { money = Math.Max(0, value); }
+        }
+
+
 
         
-        Vector2 carGreenSpeed, carBlueSpeed;
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -69,7 +78,7 @@ namespace Final_Project
             carGreenRectbet = new Rectangle(340, 200, 140, 190);
             carYellowRectBet = new Rectangle(540, 200, 140, 190);
             startBtnRect = new Rectangle(270,-135,250,250);
-            money = 10000;
+            Money = 10000;
             amountWon = 0;
             betBlue = 0;
             betGreen = 0;
@@ -168,33 +177,39 @@ namespace Final_Project
                         screen = Screen.Betting;
                 if (mouseState.LeftButton == ButtonState.Pressed && premouseState.LeftButton == ButtonState.Released)
                 {
-                    if (fiftyTknRect.Contains(mouseState.Position))
+                    if (Money > 0)
                     {
-                        money -= 50;
-                        betBlue += 50;
+                        if (fiftyTknRect.Contains(mouseState.Position))
+                        {
+                            Money -= 50;
+                            betBlue += 50;
+                        }
+                        if (hundredTknRect.Contains(mouseState.Position))
+                        {
+                            Money -= 100;
+                            betBlue += 100;
+                        }
+                        if (twentyFiveTknRect.Contains(mouseState.Position))
+                        {
+                            Money -= 25;
+                            betBlue += 25;
+                        }
+                        if (fiveTknRect.Contains(mouseState.Position))
+                        {
+                            Money -= 5;
+                            betBlue += 5;
+                        }
+                        if (allInTknRect.Contains(mouseState.Position))
+                        {
+                            betBlue += Money;
+                            Money -= Money;
+                        }
                     }
-                    if (hundredTknRect.Contains(mouseState.Position))
-                    {
-                        money -= 100;
-                        betBlue += 100;
-                    }
-                    if (twentyFiveTknRect.Contains(mouseState.Position))
-                    {
-                        money -= 25;
-                        betBlue += 25;
-                    }
-                    if (fiveTknRect.Contains(mouseState.Position))
-                    {
-                        money -= 5;
-                        betBlue += 5;
-                    }
-                    if (allInTknRect.Contains(mouseState.Position))
-                    {
-                        betBlue += money;
-                        money -= money;
-                    }
+                    else if (money <= 0)
+                        System.Diagnostics.Debug.WriteLine("Not enough money");
                 }
             }
+            
             if (screen == Screen.Green)
             {
                 if (mouseState.LeftButton == ButtonState.Pressed)
@@ -202,31 +217,36 @@ namespace Final_Project
                         screen = Screen.Betting;
                 if (mouseState.LeftButton == ButtonState.Pressed && premouseState.LeftButton == ButtonState.Released)
                 {
-                    if (fiftyTknRect.Contains(mouseState.Position))
+                    if (Money > 0)
                     {
-                        money -= 50;
-                        betGreen += 50;
+                        if (fiftyTknRect.Contains(mouseState.Position))
+                        {
+                            Money -= 50;
+                            betGreen += 50;
+                        }
+                        if (hundredTknRect.Contains(mouseState.Position))
+                        {
+                            Money -= 100;
+                            betGreen += 100;
+                        }
+                        if (twentyFiveTknRect.Contains(mouseState.Position))
+                        {
+                            Money -= 25;
+                            betGreen += 25;
+                        }
+                        if (fiveTknRect.Contains(mouseState.Position))
+                        {
+                            Money -= 5;
+                            betGreen += 5;
+                        }
+                        if (allInTknRect.Contains(mouseState.Position))
+                        {
+                            betGreen += Money;
+                            Money -= Money;
+                        }
                     }
-                    if (hundredTknRect.Contains(mouseState.Position))
-                    {
-                        money -= 100;
-                        betGreen += 100;
-                    }
-                    if (twentyFiveTknRect.Contains(mouseState.Position))
-                    {
-                        money -= 25;
-                        betGreen += 25;
-                    }
-                    if (fiveTknRect.Contains(mouseState.Position))
-                    {
-                        money -= 5;
-                        betGreen += 5;
-                    }
-                    if (allInTknRect.Contains(mouseState.Position))
-                    {
-                        betGreen += money;
-                        money -= money;
-                    }
+                    else if (money <= 0)
+                        System.Diagnostics.Debug.WriteLine("Not enough money");
                 }
 
             }
@@ -236,35 +256,41 @@ namespace Final_Project
                     if (backBtnRect.Contains(mouseState.Position))
                         screen = Screen.Betting;
                 if (mouseState.LeftButton == ButtonState.Pressed && premouseState.LeftButton == ButtonState.Released)
+                    { 
+                    if (Money > 0)
                     {
                         if (fiftyTknRect.Contains(mouseState.Position))
                         {
-                            money -= 50;
+                            Money -= 50;
                             betYellow += 50;
                         }
                         if (hundredTknRect.Contains(mouseState.Position))
                         {
-                            money -= 100;
+                            Money -= 100;
                             betYellow += 100;
                         }
                         if (twentyFiveTknRect.Contains(mouseState.Position))
                         {
-                            money -= 25;
+                            Money -= 25;
                             betYellow += 25;
                         }
                         if (fiveTknRect.Contains(mouseState.Position))
                         {
-                            money -= 5;
+                            Money -= 5;
                             betYellow += 5;
                         }
                         if (allInTknRect.Contains(mouseState.Position))
                         {
-                        betYellow += money;
-                        money -= money;
+                            betYellow += Money;
+                            Money -= Money;
                         }
+                    }
+                    else if (money <= 0)
+                        System.Diagnostics.Debug.WriteLine("Not enough money");
                 }
 
             }
+            
             //Restart
             if (screen == Screen.Betting)
             {
@@ -325,7 +351,7 @@ namespace Final_Project
                     if (betBlue >= 0)
                     {
                         amountWon += betBlue * 2;
-                        money += amountWon;
+                        Money += amountWon;
                         betBlue = 0;
                         betYellow = 0;
                         betGreen = 0;
@@ -335,7 +361,7 @@ namespace Final_Project
                     if (betGreen >= 0)
                     {
                         amountWon += betGreen * 2;
-                        money += amountWon;
+                        Money += amountWon;
                         betGreen = 0;
                         betBlue = 0;
                         betYellow = 0;
@@ -345,7 +371,7 @@ namespace Final_Project
                     if (betYellow >= 0)
                     {
                         amountWon += betYellow * 2;
-                        money += amountWon;
+                        Money += amountWon;
                         betYellow = 0;
                         betGreen = 0;
                         betBlue = 0;
@@ -394,7 +420,7 @@ namespace Final_Project
                 _spriteBatch.Draw(twentyFiveTkn,twentyFiveTknRect,Color.White);
                 _spriteBatch.Draw(hundredTkn, hundredTknRect, Color.White);
                 _spriteBatch.Draw(fiveTkn, fiveTknRect, Color.White);
-                _spriteBatch.DrawString(amount, money.ToString("Money:00$"), new Vector2(90, 20), Color.White);
+                _spriteBatch.DrawString(amount, Money.ToString("Money:00$"), new Vector2(90, 20), Color.White);
                 _spriteBatch.DrawString(amount, betBlue.ToString("Blue Boy Bet: 00$"), new Vector2(210, 20), Color.White);
                 _spriteBatch.Draw(allInTkn,allInTknRect, Color.White);
 
@@ -408,7 +434,7 @@ namespace Final_Project
                 _spriteBatch.Draw(twentyFiveTkn, twentyFiveTknRect, Color.White);
                 _spriteBatch.Draw(hundredTkn, hundredTknRect, Color.White);
                 _spriteBatch.Draw(fiveTkn, fiveTknRect, Color.White);
-                _spriteBatch.DrawString(amount, money.ToString("Money:00$"), new Vector2(90, 20), Color.White);
+                _spriteBatch.DrawString(amount, Money.ToString("Money:00$"), new Vector2(90, 20), Color.White);
                 _spriteBatch.DrawString(amount, betGreen.ToString("Green Goblin Bet: 00$"), new Vector2(210, 20), Color.White);
                 _spriteBatch.Draw(allInTkn, allInTknRect, Color.White);
             }
@@ -421,7 +447,7 @@ namespace Final_Project
                 _spriteBatch.Draw(twentyFiveTkn, twentyFiveTknRect, Color.White);
                 _spriteBatch.Draw(hundredTkn, hundredTknRect, Color.White);
                 _spriteBatch.Draw(fiveTkn, fiveTknRect, Color.White);
-                _spriteBatch.DrawString(amount, money.ToString("Money:00$"), new Vector2(90, 20), Color.White);
+                _spriteBatch.DrawString(amount, Money.ToString("Money:00$"), new Vector2(90, 20), Color.White);
                 _spriteBatch.DrawString(amount, betYellow.ToString("Yellow Bird Bet: 00$"), new Vector2(210, 20), Color.White);
                 _spriteBatch.Draw(allInTkn, allInTknRect, Color.White);
             }
